@@ -1,5 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
+import click
 
 
 def read_data(num_measurements):
@@ -26,8 +27,14 @@ def plot_data(temperatures, mean, fname):
     plt.clf()
 
 
-for measurement in [25, 100, 500]:
-    temperatures = read_data(measurement)
-    mean = compute_mean(temperatures, measurement)
-    plot_data(temperatures, mean, f"{measurement}.png")
+@click.command()
+@click.option('--measurements', '-m', type=str, help="number of measurements (as a space separated string)")
+def main(measurements):
+    for measurement in map(int, measurements.split()):
+        temperatures = read_data(measurement)
+        mean = compute_mean(temperatures, measurement)
+        plot_data(temperatures, mean, f"{measurement}.png")
 
+
+if __name__ == "__main__":
+    main()
